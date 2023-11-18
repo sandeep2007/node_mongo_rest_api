@@ -1,0 +1,29 @@
+version: "1.0"
+
+services:
+  # mongo services
+  mongo_db:
+    container_name: node_mongo_rest_api_db
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27018:27017
+    volumes:
+      - type: volume
+        source: mongo_data
+        target: /data/db
+
+  # nodejs app service
+  api:
+    container_name: api_server
+    build: .
+    ports:
+      - 5000:4000
+    env_file:
+      - ./development.env
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_data:
+    driver: local
